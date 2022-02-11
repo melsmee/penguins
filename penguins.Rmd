@@ -1,0 +1,61 @@
+---
+title: "Penguins"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Data
+
+The `palmerpenguins` data contains size measurements for three penguin species observed on three islands in the Palmer Archipelago, Antarctica:
+<https://allisonhorst.github.io/palmerpenguins/>
+
+![](https://www.gabemednick.com/post/penguin/featured.png)
+
+![](https://allisonhorst.github.io/palmerpenguins/reference/figures/lter_penguins.png)
+(Artwork by @allison_horst)
+
+```{r install packages, include=FALSE}
+library(palmerpenguins) 
+library(tidyverse)
+```
+```{r variables}
+names(penguins)
+```
+
+## Single trait distribution
+
+Exploring the distribution of single morphological traits:
+```{r single trait, warning=FALSE}
+#par(mfrow=c(1,2))
+ggplot(data = penguins) +
+  geom_boxplot(mapping = aes(x = species, y = flipper_length_mm, col = species))
+ggplot(data = penguins) +
+  geom_density(mapping = aes(x = flipper_length_mm, fill = species), alpha = 0.5)
+```
+
+
+## Relationship between multiple traits
+
+Exploring the relationship between different morphological traits:
+```{r multiple traits, warning=FALSE}
+penguins %>%
+  ggplot(mapping = aes(x = body_mass_g, y = flipper_length_mm, col = species, shape = species)) +
+  geom_point() +
+  geom_smooth(method = "lm", aes(linetype = species))
+```
+
+## Sexual dimorphism
+
+Is there sexual dimorphism in morphological traits of penguins?
+```{r dimorphism, warning=FALSE}
+penguins %>%
+  ggplot(mapping = aes(x = body_mass_g, y  = sex, col = sex))  +
+  geom_boxplot(alpha = 0) +
+  geom_jitter(size = 1) +
+  coord_flip() +
+  facet_wrap(~ species)
+```
